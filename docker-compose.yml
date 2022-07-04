@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  db:
+    container_name: postgresql-db-container
+    image: postgres:14.0
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: toor
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    networks:
+      - postgresql-network
+#  java:
+#    container_name: java-container
+#    image: openjdk:11
+#    build: ./
+#    ports:
+#      - "4200:4200"
+#    volumes:
+#      - java:/var/lib/java/data
+#    networks:
+#      - java-network
+
+volumes:
+  postgres:
+#  java:
+
+networks:
+  postgresql-network:
+#  java-network:
+
