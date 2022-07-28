@@ -2,52 +2,53 @@ package com.baranbatur.Controller;
 
 import com.baranbatur.Model.UserModel;
 import com.baranbatur.Repository.UserRepository;
+import com.baranbatur.Services.UserService;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
 @RequestMapping("/user")
 public class UserController {
-    public List<UserModel> getAllUsers(@RequestParam(required = false) String name) {
-        try {
-            List<UserModel> users = userRepository.findAll();
-            return userRepository.findAll();
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
     @Autowired
-    UserRepository userRepository;
+    UserService userService;
 
-    @GetMapping("/all")
-    public List<UserModel> getAllUsers2(@RequestParam(required = false) String name) {
+    @GetMapping(value = "/all", produces = "application/json")
+    public HashMap<String, Object> getAllUsers() {
         try {
-            List<UserModel> users = userRepository.findAll();
-            return userRepository.findAll();
+            List<UserModel> users = userService.getAll();
+
+            HashMap<String, Object> response = new HashMap<>();
+            response.put("status", "success");
+            response.put("users", users.stream().peek(user -> user.setPassword("")));
+            return response;
         } catch (Exception e) {
             return null;
         }
     }
 
-    @PostMapping("/register")
-    public String register(@RequestBody String name, @RequestBody String surname, @RequestBody String email, @RequestBody String password) {
-        //encrypt password
-        //save user
 
+    //charset=UTF-8
+
+    @PostMapping(value = "/add", produces = "application/json")
+    public boolean addUser(@RequestBody ObjectNode user) {
         try {
-            UserModel user = new UserModel();
-            user.setName(name);
-            user.setSurname(surname);
-            user.setEmail(email);
-            user.setPassword(password);
-            userRepository.save(user);
-            //if user saved successfully, return success object
-            return "success";
+            UserModel userModel = new UserModel();
+            userModel.setName(user.get("name").asText());
+            userModel.setSurname(user.get("surname").asText());
+            userModel.setEmail(user.get("email").asText());
+            userModel.setPassword(user.get("password").asText());
+            userService.save(userModel);
+
+            return true;
         } catch (Exception e) {
-            return null;
+            return false;
         }
     }
 }

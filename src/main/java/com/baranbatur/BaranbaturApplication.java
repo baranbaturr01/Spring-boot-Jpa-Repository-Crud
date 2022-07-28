@@ -1,9 +1,12 @@
 package com.baranbatur;
 
+import com.baranbatur.Model.OperatorModel;
+import com.baranbatur.Repository.UserRepository;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Configuration;
+
+import java.awt.*;
 
 @SpringBootApplication
 @Configuration
